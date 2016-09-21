@@ -4,7 +4,18 @@ grpc="/unsup/grpc-1.0.0"
 pbuf="/unsup/protobuf-3.0.2"
 thrift="/unsup/thrift-0.9.3"
 pc="lib/pkgconfig"
+
 echo "Set vars successfully"
+
 export PATH="$grpc/bin:$pbuf/bin:$thrift/bin:$PATH"
 export LD_LIBRARY_PATH="$grpc/lib:$pbuf/lib:$thrift/lib"
 export PKG_CONFIG_PATH="$grpc/$pc:$pbuf/$pc:$thrift/$pc"
+
+#  $ source p1-env
+# $ which grpc_cpp_plugin
+# /unsup/grpc-1.0.0/bin/grpc_cpp_plugin
+# $ protoc --version
+# libprotoc 3.0.0
+# $ thrift --version
+# Thrift version 0.9.3
+# source not setting $PATH properly for some reason.. set in ~/.bash_rc instead
