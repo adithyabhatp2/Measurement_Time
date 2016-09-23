@@ -34,7 +34,7 @@ using namespace tutorial;
 using namespace shared;
 
 int main() {
-  boost::shared_ptr<TTransport> socket(new TSocket("rockhopper-01.cs.wisc.edu", 9090));
+  boost::shared_ptr<TTransport> socket(new TSocket("localhost", 9090));
   boost::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
   boost::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
   CalculatorClient client(protocol);
@@ -77,9 +77,4 @@ int main() {
   } catch (TException& tx) {
     cout << "ERROR: " << tx.what() << endl;
   }
-
-  int temp = 0;
-  cin >> temp;
-
-
 }
