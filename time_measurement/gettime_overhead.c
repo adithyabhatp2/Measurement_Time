@@ -16,11 +16,7 @@
 # include <errno.h>
 # include <limits.h>
 
-
 #define BILLION 1000000000L
-
-
-
 
 
 long getAverageOverheadOfGettimeCallInNanoSeconds() {
@@ -48,6 +44,7 @@ long getAverageOverheadOfGettimeCallInNanoSeconds() {
 
     return ((BILLION * time_elapsed_sec) + time_elapsed_nsec)/100000L;
 }
+
 
 void printOverheadsOfGettimeCallsInNanoSeconds(int numCalls) {
     clockid_t clk_id;
@@ -84,6 +81,47 @@ void printOverheadsOfGettimeCallsInNanoSeconds(int numCalls) {
 
 
 
+void computeResolution(int numCalls) {
+
+    clockid_t clk_id;
+    struct timespec tp_start, tp_end, res;
+    long time_elapsed_sec;
+    long time_elapsed_nsec;
+
+    clk_id = CLOCK_MONOTONIC;
+
+    printf("\nCompute Resolution");
+
+    struct timespec * runTimes;
+    runTimes = (struct timespec *) malloc(sizeof(struct timespec)*(numCalls+1));
+
+    // Just to warm up stuff
+    clock_gettime(clk_id, &tp_start);
+    clock_gettime(clk_id, &tp_end);
+
+    time_elapsed_sec = (tp_end.tv_sec - tp_start.tv_sec);
+    time_elapsed_nsec = (tp_end.tv_nsec - tp_start.tv_nsec);
+    printf("\n%ld", (BILLION * time_elapsed_sec) + time_elapsed_nsec);
+
+    clock_gettime(clk_id, &tp_start);
+    clock_gettime(clk_id, &tp_end);
+
+    time_elapsed_sec = (tp_end.tv_sec - tp_start.tv_sec);
+    time_elapsed_nsec = (tp_end.tv_nsec - tp_start.tv_nsec);
+    printf("\n%ld", (BILLION * time_elapsed_sec) + time_elapsed_nsec);
+
+    int cnt=0;
+    while(tp_start.tv_nsec == tp_end.tv_nsec) {
+        cnt++;
+        clock_gettime(clk_id, &tp_end);
+    }
+    printf("\n%ld", (BILLION * time_elapsed_sec) + time_elapsed_nsec);
+
+    printf("\n Number of times the system call was run is : %d", cnt);
+
+}
+
+
 
 int main(int argc, char *argv[]) {
 
@@ -91,8 +129,9 @@ int main(int argc, char *argv[]) {
 
     printOverheadsOfGettimeCallsInNanoSeconds(50);
 
-    //printf("%ld\n", overheadOfGettimeNs);
+    computeResolution(10);
 
+    //printf("%ld\n", overheadOfGettimeNs);
 
     return 0;
 }
