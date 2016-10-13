@@ -25,7 +25,7 @@ long getAverageOverheadOfGettimeCallInNanoSeconds() {
     long time_elapsed_sec;
     long time_elapsed_nsec;
 
-    clk_id = CLOCK_MONOTONIC;
+    clk_id = CLOCK_MONOTONIC_RAW;
 
     // Just to warm up stuff
     clock_gettime(clk_id, &tp_start);
@@ -52,7 +52,7 @@ void printOverheadsOfGettimeCallsInNanoSeconds(int numCalls) {
     long time_elapsed_sec;
     long time_elapsed_nsec;
 
-    clk_id = CLOCK_MONOTONIC;
+    clk_id = CLOCK_MONOTONIC_RAW;
 
     struct timespec * runTimes;
     runTimes = (struct timespec *) malloc(sizeof(struct timespec)*(numCalls+1));
@@ -81,19 +81,19 @@ void printOverheadsOfGettimeCallsInNanoSeconds(int numCalls) {
 
 
 
-void computeResolution(int numCalls) {
+void computeResolution(int numIterations) {
 
     clockid_t clk_id;
     struct timespec tp_start, tp_end, res;
     long time_elapsed_sec;
     long time_elapsed_nsec;
 
-    clk_id = CLOCK_MONOTONIC;
+    clk_id = CLOCK_MONOTONIC_RAW;
 
     printf("\nCompute Resolution");
 
     struct timespec * runTimes;
-    runTimes = (struct timespec *) malloc(sizeof(struct timespec)*(numCalls+1));
+    runTimes = (struct timespec *) malloc(sizeof(struct timespec)*(numIterations+1));
 
     // Just to warm up stuff
     clock_gettime(clk_id, &tp_start);
@@ -119,6 +119,21 @@ void computeResolution(int numCalls) {
 
     printf("\n Number of times the system call was run is : %d", cnt);
 
+    int i;
+    for (i = 0; i < numIterations; i++) {
+        clock_gettime(clk_id, &tp_start);
+        clock_gettime(clk_id, &tp_end);
+        printf("\n%ld", (BILLION * time_elapsed_sec) + time_elapsed_nsec);
+    }
+
+    int uselessCtr = 0;
+    for (i = 0; i < numIterations; i++) {
+        clock_gettime(clk_id, &tp_start);
+        uselessCtr++;
+        clock_gettime(clk_id, &tp_end);
+        printf("\n%ld", (BILLION * time_elapsed_sec) + time_elapsed_nsec);
+    }
+
 }
 
 
@@ -135,5 +150,6 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
 
 
