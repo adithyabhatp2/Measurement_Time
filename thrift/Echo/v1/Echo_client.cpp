@@ -22,7 +22,7 @@ int main() {
     try {
         transport->open();
 
-        string msg = "adbhat Hellow World";
+        string msg = "adbhat Hello World";
         string returnVal;
 
         client.echo(returnVal, msg);
